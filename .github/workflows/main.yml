@@ -19,7 +19,7 @@ jobs:
 
       - name: Publish Code
         # Lệnh này sẽ build cả C# lẫn copy file wwwroot ra thư mục publish
-        run: dotnet publish -c Release -o ./publish
+        run: dotnet publish **/*.csproj -c Release -o ./publish
 
       - name: Upload to Somee
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
