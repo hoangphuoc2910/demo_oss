@@ -4,16 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Kiểm tra & Đánh giá | OSS</title>
+    <title>Quy Trình Kiểm Tra & Đánh Giá</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --success: #2ecc71;
-            --warning: #f1c40f;
-            --danger: #e74c3c;
-        }
-
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #f0f2f5;
@@ -24,18 +17,26 @@
             margin: 0;
         }
 
-        .card {
+        .container {
             background: white;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            width: 420px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 400px;
             text-align: center;
         }
 
         h2 {
-            color: #2d3436;
-            margin: 10px 0;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .step-title {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         input {
@@ -43,80 +44,65 @@
             padding: 12px;
             margin: 8px 0;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 8px;
             box-sizing: border-box;
-            outline: none;
         }
 
-        /* Progress Bar */
-        .progress-area {
-            display: none;
-            margin: 20px 0;
-        }
-
-        .progress-bg {
+        .btn {
             width: 100%;
-            background: #eee;
-            height: 10px;
-            border-radius: 10px;
-            overflow: hidden;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
         }
 
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.4s;
+        .btn-check {
+            background: #3498db;
+            color: white;
         }
 
-        #statusLabel {
-            font-size: 13px;
-            color: #636e72;
-            margin-bottom: 5px;
-            font-style: italic;
+        .btn-check:hover {
+            background: #2980b9;
         }
 
-        /* Badge */
-        .badge {
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 5px;
+        .btn-submit {
+            background: #27ae60;
+            color: white;
         }
 
-        .excellent {
-            background: #dff9fb;
-            color: var(--success);
+        .btn-submit:hover {
+            background: #2ecc71;
         }
 
-        .good {
-            background: #fef9e7;
-            color: var(--warning);
-        }
-
-        .slow {
-            background: #fdedec;
-            color: var(--danger);
-        }
-
-        /* Result & Rating */
-        #serverResult,
-        #ratingSection,
-        #finalCard {
+        /* Phần thông tin server (Hiện sau khi kiểm tra) */
+        #serverInfo {
             display: none;
+            /* Ẩn mặc định */
+            background: #e8f6f3;
+            color: #16a085;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 14px;
+            border-left: 5px solid #1abc9c;
             animation: fadeIn 0.5s;
         }
 
-        .info-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: left;
-            margin: 15px 0;
-            border-left: 4px solid var(--primary);
+        /* Phần đánh giá (Ẩn mặc định) */
+        #ratingSection {
+            display: none;
+            /* Ẩn mặc định */
+            border-top: 2px dashed #eee;
+            padding-top: 20px;
+            margin-top: 20px;
+            animation: slideDown 0.5s;
         }
 
+        /* Rating Stars */
         .rating {
             display: flex;
             flex-direction: row-reverse;
@@ -130,9 +116,9 @@
 
         .rating label {
             cursor: pointer;
+            width: 40px;
             font-size: 35px;
             color: #ddd;
-            transition: 0.2s;
         }
 
         .rating label:before {
@@ -142,40 +128,28 @@
         .rating input:checked~label,
         .rating label:hover,
         .rating label:hover~label {
-            color: var(--warning);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .btn-check {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-rate {
-            background: var(--success);
-            color: white;
+            color: #f1c40f;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
             }
 
             to {
                 opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
                 transform: translateY(0);
+                opacity: 1;
             }
         }
     </style>
@@ -183,121 +157,110 @@
 
 <body>
 
-    <div class="card">
-        <div id="step1">
-            <i class="fas fa-server" style="font-size: 40px; color: var(--primary);"></i>
-            <h2>Bước 1: Kiểm tra</h2>
-            <input type="text" id="userName" placeholder="Nhập tên của bạn...">
-            <input type="date" id="userDob">
-            <button class="btn btn-check" onclick="startCheck()" id="btnCheck">Kiểm tra kết nối</button>
-        </div>
+    <div class="container">
+        <i class="fas fa-user-circle" style="font-size: 50px; color: #3498db; margin-bottom: 10px;"></i>
+        <h2>Bước 1: Thông tin</h2>
+        <p class="step-title">Nhập thông tin & Kiểm tra Server</p>
 
-        <div class="progress-area" id="progArea">
-            <div id="statusLabel">Khởi tạo...</div>
-            <div class="progress-bg">
-                <div class="progress-fill" id="progFill"></div>
-            </div>
-        </div>
+        <input type="text" id="txtName" placeholder="Họ và tên của bạn">
+        <input type="date" id="txtDob">
 
-        <div id="serverResult" class="info-box">
-            <div id="resTime">🕒 Giờ: --</div>
-            <div id="resCount">🔢 Tổng lượt: --</div>
-            <div id="resLatency">⚡ Phản hồi: -- <span id="resBadge"></span></div>
+        <button class="btn btn-check" onclick="checkServer()" id="btnCheck">
+            <i class="fas fa-satellite-dish"></i> Kiểm tra kết nối
+        </button>
+
+        <div id="serverInfo">
+            <strong><i class="fas fa-wifi"></i> Kết nối thành công!</strong><br>
+            🕒 Giờ Server: <span id="lblTime">...</span><br>
+            🔢 Tổng lượt truy cập: <span id="lblCount">...</span>
         </div>
 
         <div id="ratingSection">
-            <hr style="border: 0; border-top: 1px dashed #ddd; margin: 20px 0;">
             <h2>Bước 2: Đánh giá</h2>
-            <div class="rating">
-                <input type="radio" name="star" id="s5" value="5"><label for="s5"></label>
-                <input type="radio" name="star" id="s4" value="4"><label for="s4"></label>
-                <input type="radio" name="star" id="s3" value="3"><label for="s3"></label>
-                <input type="radio" name="star" id="s2" value="2"><label for="s2"></label>
-                <input type="radio" name="star" id="s1" value="1"><label for="s1"></label>
-            </div>
-            <button class="btn btn-rate" onclick="submitRating()">Gửi đánh giá</button>
-        </div>
+            <p class="step-title">Chấm điểm chất lượng kết nối</p>
 
-        <div id="finalCard" style="background: #e8f8f5; padding: 20px; border-radius: 15px;">
-            <i class="fas fa-check-circle" style="font-size: 50px; color: var(--success);"></i>
-            <h3 style="color: var(--success);">Thành công!</h3>
-            <p>Cảm ơn <strong id="fName"></strong> đã chấm <span id="fStar" style="color:var(--warning)"></span> sao.
-            </p>
-            <button onclick="location.reload()" class="btn" style="background:white; border:1px solid #ddd;">Làm
-                mới</button>
+            <div class="rating">
+                <input type="radio" name="star" id="star5" value="5"><label for="star5"></label>
+                <input type="radio" name="star" id="star4" value="4"><label for="star4"></label>
+                <input type="radio" name="star" id="star3" value="3"><label for="star3"></label>
+                <input type="radio" name="star" id="star2" value="2"><label for="star2"></label>
+                <input type="radio" name="star" id="star1" value="1"><label for="star1"></label>
+            </div>
+
+            <button class="btn btn-submit" onclick="submitRating()" id="btnSubmit">
+                <i class="fas fa-paper-plane"></i> Gửi đánh giá
+            </button>
         </div>
     </div>
 
     <script>
-        const API = 'http://dh52201267oss.somee.com/api/time';
+        const API_URL = 'http://dh52201267oss.somee.com/api/time';
 
-        async function startCheck() {
-            const name = document.getElementById('userName').value;
-            if (!name) return alert("Vui lòng nhập tên!");
+        // HÀM 1: KIỂM TRA KẾT NỐI (GỌI GET)
+        async function checkServer() {
+            const name = document.getElementById('txtName').value;
+            if (!name) return alert("Vui lòng nhập tên trước khi kiểm tra!");
 
-            document.getElementById('btnCheck').style.display = 'none';
-            document.getElementById('progArea').style.display = 'block';
-
-            const steps = [
-                { p: 30, t: "Đang quét địa chỉ IP..." },
-                { p: 60, t: "Đang kết nối Somee Server..." },
-                { p: 90, t: "Đang truy vấn Database..." }
-            ];
-
-            for (let s of steps) {
-                document.getElementById('statusLabel').innerText = s.t;
-                document.getElementById('progFill').style.width = s.p + "%";
-                await new Promise(r => setTimeout(r, 700));
-            }
+            const btn = document.getElementById('btnCheck');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kết nối...';
+            btn.disabled = true;
 
             try {
-                const start = performance.now();
-                const res = await fetch(API);
+                // Gọi GET để lấy giờ (không gửi dữ liệu gì cả)
+                const res = await fetch(API_URL, { method: 'GET' });
+                if (!res.ok) throw new Error("Server lỗi hoặc chưa bật!");
+
                 const data = await res.json();
-                const ms = Math.round(performance.now() - start);
 
-                document.getElementById('progFill').style.width = "100%";
-                document.getElementById('statusLabel').innerText = "Hoàn tất!";
+                // Hiển thị thông tin server
+                document.getElementById('lblTime').innerText = data.serverTime;
+                document.getElementById('lblCount').innerText = data.totalChecks;
+                document.getElementById('serverInfo').style.display = 'block';
 
-                document.getElementById('resTime').innerText = "🕒 Giờ: " + data.serverTime;
-                document.getElementById('resCount').innerText = "🔢 Tổng lượt: " + data.totalChecks;
-                document.getElementById('resLatency').innerText = "⚡ Phản hồi: " + ms + " ms";
-
-                const b = document.getElementById('resBadge');
-                if (ms < 200) { b.innerText = "TUYỆT VỜI"; b.className = "badge excellent"; }
-                else if (ms < 800) { b.innerText = "ỔN ĐỊNH"; b.className = "badge good"; }
-                else { b.innerText = "CHẬM"; b.className = "badge slow"; }
-
-                document.getElementById('progArea').style.display = 'none';
-                document.getElementById('serverResult').style.display = 'block';
+                // Mở khóa Bước 2 (Đánh giá)
                 document.getElementById('ratingSection').style.display = 'block';
-            } catch (e) { alert("Lỗi kết nối!"); location.reload(); }
+
+                // Khóa nút kiểm tra lại để user tập trung đánh giá
+                btn.innerHTML = '<i class="fas fa-check"></i> Đã kiểm tra xong';
+                btn.style.background = '#95a5a6';
+
+            } catch (e) {
+                alert("Lỗi: " + e.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-satellite-dish"></i> Kiểm tra lại';
+            }
         }
 
+        // HÀM 2: GỬI ĐÁNH GIÁ (GỌI POST)
         async function submitRating() {
-            const star = document.querySelector('input[name="star"]:checked');
-            if (!star) return alert("Vui lòng chọn số sao!");
+            const name = document.getElementById('txtName').value;
+            const dob = document.getElementById('txtDob').value;
+            const stars = document.querySelector('input[name="star"]:checked');
+
+            if (!stars) return alert("Vui lòng chọn số sao!");
+
+            const btn = document.getElementById('btnSubmit');
+            btn.innerHTML = 'Đang gửi...';
 
             try {
-                const res = await fetch(API, {
+                // Gọi POST để lưu dữ liệu
+                const res = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name: document.getElementById('userName').value,
-                        dob: document.getElementById('userDob').value || null,
-                        rating: parseInt(star.value)
+                        name: name,
+                        dob: dob ? dob : null,
+                        rating: parseInt(stars.value)
                     })
                 });
-                const result = await res.json();
-                if (result.success) {
-                    document.getElementById('serverResult').style.display = 'none';
-                    document.getElementById('ratingSection').style.display = 'none';
-                    document.getElementById('step1').style.display = 'none';
-                    document.getElementById('finalCard').style.display = 'block';
-                    document.getElementById('fName').innerText = result.data.name;
-                    document.getElementById('fStar').innerText = result.data.rating;
+
+                if (res.ok) {
+                    alert("✅ Cảm ơn bạn đã đánh giá!");
+                    location.reload(); // Tải lại trang để làm mới
+                } else {
+                    alert("Lỗi khi gửi đánh giá.");
                 }
-            } catch (e) { alert("Lỗi khi gửi!"); }
+            } catch (e) { alert("Lỗi mạng: " + e.message); }
         }
     </script>
 </body>
