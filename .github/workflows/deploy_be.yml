@@ -4,16 +4,16 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "backend/**" # Chỉ chạy khi có thay đổi trong thư mục Backend
+      - "Backend/**" # Chỉ chạy khi có thay đổi trong thư mục Backend
 
 jobs:
   deploy-be:
     runs-on: ubuntu-latest
     steps:
-      - name: Get latest code
+      - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      - name: Sync Backend to InfinityFree
+      - name: 📂 Sync Backend to InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.IF_HOST }}
@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.IF_PASS }}
 
           # Lấy code từ thư mục Backend trên GitHub
-          local-dir: ./backend/
+          local-dir: ./Backend/
 
           # Đẩy vào thư mục gốc htdocs trên Server
           server-dir: htdocs/

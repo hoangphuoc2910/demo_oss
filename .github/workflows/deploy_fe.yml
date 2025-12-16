@@ -4,16 +4,16 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "frontend/**" # Chỉ chạy khi có thay đổi trong thư mục Frontend
+      - "Frontend/**" # Chỉ chạy khi có thay đổi trong thư mục Frontend
 
 jobs:
   deploy-fe:
     runs-on: ubuntu-latest
     steps:
-      - name: Get latest code
+      - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      - name: Sync Frontend to InfinityFree
+      - name: 📂 Sync Frontend to InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.IF_HOST }}
@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.IF_PASS }}
 
           # Lấy code từ thư mục Frontend trên GitHub
-          local-dir: ./frontend/
+          local-dir: ./Frontend/
 
           # Đẩy vào thư mục gốc htdocs trên Server
           server-dir: htdocs/
