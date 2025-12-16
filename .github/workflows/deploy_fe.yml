@@ -1,33 +1,30 @@
-name: Deploy Frontend to Somee
+name: Deploy Frontend Only
 
 on:
   push:
-    branches:
-      - main # Hoặc 'master' tùy tên nhánh chính của bạn
+    branches: ["main"]
+    paths:
+      - "Frontend/**" # Chỉ chạy khi có thay đổi trong thư mục Frontend
 
 jobs:
-  web-deploy:
-    name: Deploy Frontend
+  deploy-fe:
     runs-on: ubuntu-latest
     steps:
       - name: Get latest code
         uses: actions/checkout@v4
 
-      - name: Sync files to Somee
+      - name: Sync Frontend to InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.IF_HOST }}
+          username: ${{ secrets.IF_USER }}
+          password: ${{ secrets.IF_PASS }}
 
-          # QUAN TRỌNG: Đường dẫn trên Server Somee
-          # Bạn phải thay đúng tên thư mục gốc của web bạn
-          server-dir: /www.dh52201267oss.somee.com/
+          # Lấy code từ thư mục Frontend trên GitHub
+          local-dir: ./frontend/
 
-          # QUAN TRỌNG: File cần upload
-          # Nếu file index.html nằm ngay ngoài cùng repo thì bỏ dòng local-dir
-          # Nếu file index.html nằm trong thư mục ví dụ 'Frontend' thì bỏ comment dòng dưới:
-          # local-dir: ./Frontend/
+          # Đẩy vào thư mục gốc htdocs trên Server
+          server-dir: htdocs/
 
-          # Tùy chọn: Xóa file cũ trước khi up (Nên để true để sạch rác)
-          dangerous-clean-slate: true
+          # CỰC KỲ QUAN TRỌNG: Để false để nó KHÔNG xóa file api.php của Backend
+          dangerous-clean-slate: false
